@@ -1,0 +1,53 @@
+release:
+  github:
+    owner: 256bit-src
+    name: plugin
+  name_template: '{{.Tag}}'
+brew:
+  github:
+    owner: 256bit-src
+    name: homebrew-plugin
+  commit_author:
+    name: lynsei
+    email: goreleaser@carlosbecker.com
+  description: "Simple command-line cli-plugin-plugin manager"
+  homepage: "https://github.com/256bit-src/plugin"
+  dependencies:
+    - fzf
+  install: |
+    bin.install Dir['plugin']
+    zsh_completion.install "misc/completions/zsh/_plugin"
+  test: |
+    system "#{bin}/plugin"
+builds:
+- goos:
+  - linux
+  - darwin
+  - windows
+  goarch:
+  - amd64
+  - "386"
+  goarm:
+  - "6"
+  main: .
+  ldflags: -s -w -X github.com/256bit-src/plugin/cmd.version={{.Version}}
+archive:
+  format: tar.gz
+  name_template: '{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{
+    .Arm }}{{ end }}'
+  files:
+  - LICENSE*
+  - README*
+  - CHANGELOG*
+  - misc/completions/zsh/_plugin
+nfpm:   
+  homepage: https://github.com/256bit-src/plugin 
+  maintainer: Lynsei Asynynvinynya <256bit-src@gmail.com>
+  description: "Simple command-line cli-plugin-plugin manager"
+  bindir: /usr/local/bin     
+  license: MIT
+  formats:   
+  - deb      
+  - rpm
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
